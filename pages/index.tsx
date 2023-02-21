@@ -8,6 +8,10 @@ import requests from "@/utils/requests";
 import { log } from "console";
 import { Movie } from "@/typings";
 import Row from "@/components/Row";
+import useAuth from "@/hooks/useAuth";
+import { useRecoilValue } from "recoil";
+import { modalState } from "@/atoms/modalAtom";
+import Modal from "@/components/Modal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +27,12 @@ interface Props {
 }
 
 export default function Home({ netflixOriginals, actionMovies, comedyMovies, documentaries, horrorMovies, romanceMovies, topRated, trendingNow }: Props) {
-  console.log(netflixOriginals);
+  const { loading } = useAuth();
+  const showModal = useRecoilValue(modalState);
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <div className="relative h-screen bg-gradient-to-b lg:h-[140vh]">
@@ -49,7 +58,8 @@ export default function Home({ netflixOriginals, actionMovies, comedyMovies, doc
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
-      {/* modal */}
+
+      {showModal && <Modal />}
     </div>
   );
 }
